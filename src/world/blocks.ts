@@ -8,6 +8,7 @@ export enum BlockId {
   STONE = 3,
   SAND = 4,
   WOOD = 5,
+  LEAVES = 6,
 }
 
 export interface BlockDef {
@@ -27,6 +28,7 @@ export const BLOCKS: readonly BlockDef[] = [
   { id: BlockId.STONE, name: "Pierre", color: 0x8a8a8a, solid: true, placeable: true },
   { id: BlockId.SAND, name: "Sable", color: 0xdcd29a, solid: true, placeable: true },
   { id: BlockId.WOOD, name: "Bois", color: 0x9c6b3f, solid: true, placeable: true },
+  { id: BlockId.LEAVES, name: "Feuille", color: 0x3f7a28, solid: true, placeable: true },
 ];
 
 export function getBlockDef(id: BlockId): BlockDef {
@@ -44,7 +46,7 @@ export const DEFAULT_HOTBAR: BlockId[] = [
   BlockId.STONE,
   BlockId.SAND,
   BlockId.WOOD,
-  BlockId.AIR,
+  BlockId.LEAVES,
   BlockId.AIR,
   BlockId.AIR,
   BlockId.AIR,

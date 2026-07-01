@@ -6,10 +6,11 @@ comportements attendus, et périmètre (ce qui est **dans** le MVP vs **hors**).
 
 ## Périmètre retenu (voir `00-overview.md`)
 
-Mode **créatif** · monde **plat (superflat)** fini · **marche + gravité +
-collisions** · **casser/poser** · **hotbar** · **cycle jour/nuit**.
-Hors MVP : survie, génération procédurale, chunks infinis, **sauvegarde**,
-réseau, mobs, sons.
+Mode **créatif** · monde fini avec **relief procédural** (plaines, collines,
+montagnes) · **forêts** groupées · **marche + gravité + collisions** ·
+**casser/poser** · **hotbar** · **cycle jour/nuit**.
+Hors MVP : survie, **biomes/grottes/minerais/structures**, chunks infinis,
+**sauvegarde**, réseau, mobs, sons.
 
 ## Documents prévus
 
@@ -17,7 +18,7 @@ réseau, mobs, sons.
 | --- | --------------------------- | ------------------------------------------------------------- | ---- |
 | 00  | `00-overview.md`            | Vision, périmètre MVP, ce qui est explicitement hors-scope     | ✅   |
 | 01  | `01-architecture.md`        | Modules, flux de données, boucle de jeu, choix techniques      | ✅   |
-| 02  | `02-world.md`               | Monde plat superflat, structure de données des blocs           | ✅   |
+| 02  | `02-world.md`               | Structure des blocs + relief procédural (collines/montagnes)   | ✅   |
 | 03  | `03-block-system.md`        | Types de blocs, registre, propriétés, textures                 | ✅   |
 | 04  | `04-rendering.md`           | Scène three.js, meshing des faces visibles, matériaux, ciel    | ✅   |
 | 05  | `05-player-controls.md`     | Caméra FPS, déplacements, pointer lock, entrées clavier/souris | ✅   |
@@ -25,9 +26,12 @@ réseau, mobs, sons.
 | 07  | `07-interaction.md`         | Raycasting, casser / poser des blocs, sélection                | ✅   |
 | 08  | `08-hotbar-hud.md`          | Hotbar, sélection de bloc, réticule                            | ✅   |
 | 09  | `09-day-night.md`           | Cycle jour/nuit : ciel + lumière directionnelle                | ✅   |
+| 10  | `10-trees.md`               | Bloc feuille, générateur de chêne, forêts (bruit de densité)   | ✅   |
 
 > Hors périmètre MVP (non planifiés) : persistance, performance/chunks,
-> génération procédurale. À rouvrir en post-MVP si besoin.
+> génération procédurale **avancée** (biomes, grottes, minerais, structures).
+> Le relief simple (collines/montagnes/forêts) est, lui, dans le MVP. À rouvrir
+> en post-MVP si besoin.
 
 Légende : ⬜ à écrire · 🟨 brouillon (à valider) · ✅ validé
 

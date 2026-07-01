@@ -1,7 +1,7 @@
 // Orchestration : possède tous les systèmes et pilote la boucle de jeu.
 // Ordre de la frame : cf. specs/01 §6.
 
-import { EYE_HEIGHT, FIXED_DT, GROUND_HEIGHT, WORLD_X, WORLD_Z } from "./core/constants";
+import { EYE_HEIGHT, FIXED_DT, WORLD_X, WORLD_Z } from "./core/constants";
 import { Clock } from "./core/Clock";
 import { Input } from "./input/Input";
 import { BlockHighlight } from "./interaction/BlockHighlight";
@@ -48,10 +48,13 @@ export class Game {
 
     this.environment = new Environment(this.renderer.scene);
 
+    // Spawn au centre du monde, posé sur la surface (relief variable).
+    const cx = Math.floor(WORLD_X / 2);
+    const cz = Math.floor(WORLD_Z / 2);
     this.player = new Player({
-      x: WORLD_X / 2 + 0.5,
-      y: GROUND_HEIGHT + 1,
-      z: WORLD_Z / 2 + 0.5,
+      x: cx + 0.5,
+      y: this.world.columnTop(cx, cz) + 1,
+      z: cz + 0.5,
     });
     this.camera = new FirstPersonCamera();
     this.controller = new PlayerController();

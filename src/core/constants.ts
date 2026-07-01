@@ -8,9 +8,33 @@ export const SECTION = 16;
 export const SECTIONS_X = WORLD_X / SECTION; // 16
 export const SECTIONS_Z = WORLD_Z / SECTION; // 16
 
-// --- Génération superflat ---
-export const GROUND_HEIGHT = 32; // y de la couche d'herbe
+// --- Génération du terrain (relief) cf. specs/02 ---
+export const WORLD_SEED = 1337; // graine du monde (génération déterministe)
 export const DIRT_LAYERS = 3; // couches de terre sous l'herbe
+
+export const TERRAIN_BASE = 18; // altitude de base (plaines)
+export const HILL_FREQ = 1 / 32; // fréquence des collines
+export const HILL_AMP = 10; // amplitude des collines (arrondies)
+export const HILL_OCTAVES = 4;
+
+export const MTN_REGION_FREQ = 1 / 96; // fréquence des zones montagneuses
+export const MTN_REGION_LO = 0.5; // seuil bas d'apparition des montagnes
+export const MTN_REGION_HI = 0.78; // seuil haut (montagnes pleines)
+export const MTN_FREQ = 1 / 40; // fréquence des crêtes
+export const MTN_AMP = 34; // amplitude des montagnes (pointues)
+export const MTN_SHARPNESS = 2.2; // exposant -> pics acérés
+
+export const STONE_LINE = 38; // au-dessus : surface rocheuse (pierre apparente)
+export const STEEP_SLOPE = 3; // pente (Δh) au-delà de laquelle la pierre affleure
+
+// --- Forêts & arbres (cf. specs/10) ---
+export const FOREST_FREQ = 1 / 40; // fréquence des zones de forêt
+export const FOREST_THRESHOLD = 0.55; // en dessous : plaine sans arbre
+export const FOREST_FULL = 0.78; // au-dessus : densité maximale
+export const TREE_MIN_HEIGHT = 4; // hauteur de tronc min
+export const TREE_MAX_HEIGHT = 6; // hauteur de tronc max
+export const TREE_SPACING = 3; // rayon d'exclusion entre troncs (forêts touffues)
+export const TREE_ATTEMPTS = 8000; // tentatives de placement (beaucoup sont rejetées)
 
 // --- Physique ---
 export const GRAVITY = -25; // blocs/s²

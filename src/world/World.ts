@@ -33,6 +33,14 @@ export class World {
     return isSolidId(this.raw[index(x, y, z)] as BlockId);
   }
 
+  /** y du bloc solide le plus haut d'une colonne (-1 si vide). Sert au spawn. */
+  columnTop(x: number, z: number): number {
+    for (let y = WORLD_Y - 1; y >= 0; y--) {
+      if (this.isSolid(x, y, z)) return y;
+    }
+    return -1;
+  }
+
   setBlock(x: number, y: number, z: number, id: BlockId): void {
     if (!inBounds(x, y, z)) return; // OOB -> no-op
     const i = index(x, y, z);

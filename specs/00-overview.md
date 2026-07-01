@@ -6,21 +6,21 @@
 ## 1. Vision
 
 Un mini-Minecraft **jouable dans le navigateur**. Le joueur explore un monde
-de blocs plat en vue première personne, marche dessus (avec gravité et
-collisions), **casse et pose** des blocs choisis dans une **hotbar**, le tout
-sous un **cycle jour/nuit**. Mode **créatif** : blocs illimités, pas de santé
-ni de survie.
+de blocs **avec du relief** (plaines, collines, montagnes) en vue première
+personne, marche dessus (avec gravité et collisions), **casse et pose** des
+blocs choisis dans une **hotbar**, le tout sous un **cycle jour/nuit**.
+Mode **créatif** : blocs illimités, pas de santé ni de survie.
 
 Objectif du MVP : valider la boucle cœur *(voir → viser → casser/poser → se
 déplacer)* avec un rendu fluide, sans s'encombrer des systèmes lourds (survie,
-génération procédurale, réseau).
+biomes/grottes, réseau).
 
 ## 2. Definition of Done
 
 Le MVP est considéré terminé quand, dans un navigateur desktop récent :
 
 - [ ] Le jeu se lance via `npm run dev` sans erreur.
-- [ ] Un monde plat texturé est affiché.
+- [ ] Un monde avec relief (plaines, collines, montagnes) est affiché.
 - [ ] La caméra est en vue FPS avec **pointer lock** (souris = regard).
 - [ ] Le joueur se déplace (WASD), **saute**, **tombe** et **entre en
       collision** avec les blocs (ne traverse ni le sol ni les murs de blocs).
@@ -40,12 +40,13 @@ Le MVP est considéré terminé quand, dans un navigateur desktop récent :
 | Domaine        | Décision                                                         |
 | -------------- | --------------------------------------------------------------- |
 | Mode de jeu    | **Créatif** (blocs illimités, pas de santé/faim/dégâts)          |
-| Monde          | **Plat (superflat)**, fini, généré au démarrage                  |
+| Monde          | **Relief procédural** (plaines, collines arrondies, montagnes pointues + pierre apparente), fini, généré au démarrage via bruit — cf. [`02-world.md`](./02-world.md) |
 | Déplacement    | **Marche + gravité + saut + collisions** (AABB), vue FPS         |
 | Interaction    | **Casser / poser** des blocs via raycasting                     |
 | UI             | **Hotbar** (choix du bloc) + réticule                           |
 | Ambiance       | **Cycle jour/nuit** (ciel + lumière directionnelle)             |
 | Blocs          | Une **poignée de types** (voir §7)                              |
+| Décoration     | **Arbres** dispersés (tronc `WOOD` + feuillage `LEAVES`), cf. [`10-trees.md`](./10-trees.md) |
 | Rendu          | three.js, meshing des faces visibles uniquement                 |
 
 ### ❌ Hors MVP (explicitement exclu)
@@ -55,7 +56,10 @@ faire l'objet d'itérations ultérieures.
 
 - **Survie** : santé, faim, dégâts de chute, mort, respawn.
 - **Craft** et inventaire complet (coffres, stacks, drag & drop).
-- **Génération procédurale** : relief, bruit, biomes, grottes, arbres.
+- **Génération procédurale avancée** : biomes, grottes, minerais, structures,
+  surplombs/overhangs. (Le relief simple — collines, montagnes, forêts par bruit
+  — est **dans** le MVP, cf. [`02-world.md`](./02-world.md) et
+  [`10-trees.md`](./10-trees.md) ; mais pas de biomes ni de cavités.)
 - **Monde infini / streaming de chunks** autour du joueur.
 - **Sauvegarde / chargement** (localStorage / IndexedDB) — *reporté*.
 - **Multijoueur / réseau**.
@@ -98,11 +102,13 @@ Le détail (ordre précis, sous-systèmes, découpage en modules) est traité da
 - **Hauteur** : **64** blocs.
 - **Total** : ~**4,2 M blocs** → 1 octet/bloc = **~4,2 Mo** en mémoire
   (`Uint8Array`), acceptable.
-- **Superflat** : couches fixes, du bas (y=0) vers le haut :
-  - `y` bas : **pierre**
-  - au-dessus : **terre** (quelques couches)
-  - surface : **herbe** (1 couche)
-  - au-dessus : **air**
+- **Relief procédural** (par bruit, cf. [`02-world.md`](./02-world.md) §8) :
+  - **plaines** : altitude basse, herbe ;
+  - **collines** : reliefs arrondis modérés, recouverts d'herbe ;
+  - **montagnes** : hautes et pointues, **pierre apparente** aux sommets et sur
+    les pentes raides ;
+  - profil de colonne : **pierre** en profondeur, quelques couches de **terre**,
+    **herbe** (ou **pierre** en altitude/pente) en surface, **air** au-dessus.
 - **Bords du monde** : **mur invisible** — le joueur est borné et ne peut pas
   tomber hors du monde.
 
@@ -125,7 +131,8 @@ Le détail (ordre précis, sous-systèmes, découpage en modules) est traité da
 | `dirt`       | Terre    | Sous la surface                       |
 | `stone`      | Pierre   | Profondeur                            |
 | `sand`       | Sable    | Bloc posable                          |
-| `wood`       | Bois     | Bloc posable                          |
+| `wood`       | Bois     | Tronc des arbres / bloc posable       |
+| `leaves`     | Feuille  | Feuillage des arbres / bloc posable   |
 
 Le registre exact, les textures et les propriétés sont définis dans
 [`03-block-system.md`](./03-block-system.md).

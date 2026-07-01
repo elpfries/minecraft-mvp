@@ -32,6 +32,7 @@ export enum BlockId {
   STONE = 3,
   SAND = 4,
   WOOD = 5,
+  LEAVES = 6,
 }
 ```
 
@@ -70,9 +71,15 @@ export interface BlockDef {
 | `STONE`   | Pierre  | `0x8A8A8A` | —          | true  | true      |
 | `SAND`    | Sable   | `0xDCD29A` | —          | true  | true      |
 | `WOOD`    | Bois    | `0x9C6B3F` | —          | true  | true      |
+| `LEAVES`  | Feuille | `0x3F7A28` | —          | true  | true      |
 
 > Couleurs indicatives, ajustables au ressenti. `GRASS` = dessus vert, côtés/bas
 > couleur terre (identique à `DIRT`) → aspect « bloc d'herbe » classique.
+>
+> **`LEAVES`** : bloc **opaque et solide** au MVP (comme les autres). Le
+> feuillage rend donc comme un bloc plein vert — équivalent des « feuilles
+> rapides » de Minecraft. La **transparence** (feuillage ajouré) est post-MVP.
+> Utilisé par le générateur d'arbres ([`10-trees.md`](./10-trees.md)).
 
 Le registre est un **tableau indexé par `id`** (accès O(1)) :
 
@@ -106,7 +113,7 @@ Un slot vide = `AIR` (poser depuis un slot vide = no-op).
 ```ts
 export const DEFAULT_HOTBAR: BlockId[] = [
   BlockId.GRASS, BlockId.DIRT, BlockId.STONE, BlockId.SAND, BlockId.WOOD,
-  BlockId.AIR,   BlockId.AIR,  BlockId.AIR,   BlockId.AIR,
+  BlockId.LEAVES, BlockId.AIR, BlockId.AIR,   BlockId.AIR,
 ];
 ```
 
