@@ -7,10 +7,21 @@ function hexColor(hex: number): string {
   return "#" + hex.toString(16).padStart(6, "0");
 }
 
+// Molette : quantité de scroll accumulée pour valider un cran, et nombre de
+// frames au repos avant de ré-armer. Adapté à la Magic Mouse (flux continu +
+// inertie) -> un seul cran par glissement.
+const SCROLL_THRESHOLD = 24;
+const SCROLL_IDLE_FRAMES = 6;
+
 export class Hotbar {
   readonly slots: BlockId[];
   selectedIndex = 0;
   private slotEls: HTMLElement[] = [];
+
+  // État de la molette (un cran par geste)
+  private scrollAccum = 0;
+  private scrollArmed = true;
+  private scrollIdle = 0;
 
   constructor(slots: BlockId[] = [...DEFAULT_HOTBAR]) {
     this.slots = slots;
@@ -67,10 +78,32 @@ export class Hotbar {
   }
 
   update(input: Input): void {
+    // Sélection directe par chiffre
     for (let i = 0; i < Math.min(9, this.slots.length); i++) {
       if (input.isDown("Digit" + (i + 1))) this.selectedIndex = i;
     }
-    if (input.wheelDelta !== 0) this.scroll(input.wheelDelta);
+
+    // Molette : un cran par geste, l'inertie (momentum) est absorbée.
+    const d = input.wheelDelta;
+    if (d === 0) {
+      // le geste s'est arrêté : ré-armer après quelques frames au repos
+      if (++this.scrollIdle >= SCROLL_IDLE_FRAMES) {
+        this.scrollArmed = true;
+        this.scrollAccum = 0;
+      }
+    } else {
+      this.scrollIdle = 0;
+      if (this.scrollArmed) {
+        this.scrollAccum += d;
+        if (Math.abs(this.scrollAccum) >= SCROLL_THRESHOLD) {
+          this.scroll(this.scrollAccum); // scroll() n'utilise que le signe
+          this.scrollArmed = false; // désarmé tant que le geste (momentum) dure
+          this.scrollAccum = 0;
+        }
+      }
+      // si désarmé : on ignore (inertie en cours)
+    }
+
     this.refresh();
   }
 
