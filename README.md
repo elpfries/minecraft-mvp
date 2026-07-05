@@ -61,6 +61,8 @@ npm run dev      # http://localhost:5173
 | `npm run build`     | Vérifie les types puis build de production             |
 | `npm run preview`   | Sert le build de production en local                  |
 | `npm run typecheck` | Vérifie les types sans émettre de fichiers            |
+| `npm test`          | Lance les tests unitaires (Vitest, une fois)          |
+| `npm run test:watch`| Relance les tests à chaque modification               |
 
 ## Structure
 
@@ -68,7 +70,7 @@ npm run dev      # http://localhost:5173
 minecraft-mvp/
 ├── index.html              # Page hôte (monte src/main.ts)
 ├── public/                 # Assets statiques servis tels quels
-├── specs/                  # 📄 Spécifications détaillées (00 → 10)
+├── specs/                  # 📄 Spécifications détaillées (00 → 11)
 ├── src/
 │   ├── main.ts             # Point d'entrée (monte le jeu)
 │   ├── Game.ts             # Orchestration + boucle de jeu (pas fixe)
@@ -90,6 +92,23 @@ minecraft-mvp/
 Le dossier [`specs/`](./specs/) contient la spécification complète du projet
 (architecture, monde, rendu, physique, interaction, HUD, jour/nuit, arbres).
 Voir [`specs/README.md`](./specs/README.md) pour l'index.
+
+## Tests
+
+Le cœur **logique** du jeu est couvert par des tests unitaires
+[Vitest](https://vitest.dev/) — fonctions pures, sans three.js ni navigateur :
+
+```bash
+npm test           # lance toute la suite une fois
+npm run test:watch # relance à chaque modification
+```
+
+Les fichiers `*.test.ts` sont placés **à côté** du module testé (ex.
+[`src/world/coords.test.ts`](./src/world/coords.test.ts)). La suite couvre les
+conversions de coordonnées, le bruit / PRNG, la génération du terrain, le
+raycast, la physique (collisions AABB) et la pose / casse de blocs. La démarche,
+les cibles et le déroulé pédagogique sont décrits dans
+[`specs/11-tests.md`](./specs/11-tests.md).
 
 ## Réglages
 

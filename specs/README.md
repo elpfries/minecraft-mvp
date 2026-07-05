@@ -27,6 +27,7 @@ Hors MVP : survie, **biomes/grottes/minerais/structures**, chunks infinis,
 | 08  | `08-hotbar-hud.md`          | Hotbar, sélection de bloc, réticule                            | ✅   |
 | 09  | `09-day-night.md`           | Cycle jour/nuit : ciel + lumière directionnelle                | ✅   |
 | 10  | `10-trees.md`               | Bloc feuille, générateur de chêne, forêts (bruit de densité)   | ✅   |
+| 11  | `11-tests.md`               | Tests unitaires (Vitest) : cibles, conventions, séances        | ✅   |
 
 > Hors périmètre MVP (non planifiés) : persistance, performance/chunks,
 > génération procédurale **avancée** (biomes, grottes, minerais, structures).
