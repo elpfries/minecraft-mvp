@@ -1,10 +1,9 @@
 # Minecraft MVP
 
+![CI](https://github.com/elpfries/minecraft-mvp/actions/workflows/ci.yml/badge.svg)
+
 <!-- Lien démo — à activer après la Phase 3 (GitHub Pages) :
 ▶️ **[Jouer à la démo en ligne](https://elpfries.github.io/minecraft-mvp/)**
--->
-<!-- Badge CI — à activer après la Phase 2 (GitHub Actions) :
-![CI](https://github.com/elpfries/minecraft-mvp/actions/workflows/ci.yml/badge.svg)
 -->
 
 Un mini-Minecraft **jouable dans le navigateur**, construit avec **TypeScript**,
