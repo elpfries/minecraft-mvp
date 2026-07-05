@@ -2,9 +2,7 @@
 
 ![CI](https://github.com/elpfries/minecraft-mvp/actions/workflows/ci.yml/badge.svg)
 
-<!-- Lien démo — à activer après la Phase 3 (GitHub Pages) :
 ▶️ **[Jouer à la démo en ligne](https://elpfries.github.io/minecraft-mvp/)**
--->
 
 Un mini-Minecraft **jouable dans le navigateur**, construit avec **TypeScript**,
 **three.js** et **Vite**. Mode créatif : on explore un monde à relief, on casse
