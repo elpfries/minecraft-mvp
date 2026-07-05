@@ -22,7 +22,9 @@ export async function loadAtlas(): Promise<THREE.Texture> {
             resolve();
           };
           img.onerror = () => reject(new Error(`Texture introuvable : ${name}`));
-          img.src = `/textures/blocks/${name}.png`;
+          // BASE_URL (= "/minecraft-mvp/" en prod, "/" en dev) : indispensable
+          // pour que les assets soient trouvés sous le sous-chemin GitHub Pages.
+          img.src = `${import.meta.env.BASE_URL}textures/blocks/${name}.png`;
         }),
     ),
   );
