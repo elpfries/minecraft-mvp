@@ -10,7 +10,9 @@ import { FirstPersonCamera } from "./player/FirstPersonCamera";
 import { Physics } from "./player/Physics";
 import { Player } from "./player/Player";
 import { PlayerController } from "./player/PlayerController";
+import * as THREE from "three";
 import { Environment } from "./render/Environment";
+import { createTerrainMaterial } from "./render/materials";
 import { Renderer } from "./render/Renderer";
 import { SectionMeshManager } from "./render/SectionMeshManager";
 import { DayNightCycle } from "./time/DayNightCycle";
@@ -39,11 +41,12 @@ export class Game {
   private accumulator = 0;
   private overlay: HTMLElement;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, atlas: THREE.Texture) {
     this.renderer = new Renderer(container);
 
     this.world = new World(new WorldGenerator());
-    this.meshManager = new SectionMeshManager(this.world, this.renderer.scene);
+    const material = createTerrainMaterial(atlas);
+    this.meshManager = new SectionMeshManager(this.world, this.renderer.scene, material);
     this.meshManager.buildAll();
 
     this.environment = new Environment(this.renderer.scene);

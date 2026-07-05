@@ -1,10 +1,8 @@
 // Matériau unique partagé par toutes les sections. Cf. specs/04 §4.
-// La couleur finale vient des vertex colors (couleur du bloc) modulée par la
-// lumière de la scène. color=blanc pour ne pas teinter.
+// Texturé par l'atlas ; l'éclairage de la scène (jour/nuit) module le rendu.
 
 import * as THREE from "three";
 
-export const terrainMaterial = new THREE.MeshLambertMaterial({
-  vertexColors: true,
-  color: 0xffffff,
-});
+export function createTerrainMaterial(atlas: THREE.Texture): THREE.MeshLambertMaterial {
+  return new THREE.MeshLambertMaterial({ map: atlas });
+}

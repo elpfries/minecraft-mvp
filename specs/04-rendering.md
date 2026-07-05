@@ -16,12 +16,12 @@ modifiées. Pas de texture (couleurs unies), pas d'ombres portées.
 - ✅ `Renderer` : `WebGLRenderer` + `Scene` + `PerspectiveCamera` + resize.
 - ✅ `Mesher` : section → `BufferGeometry` par **face culling**.
 - ✅ `SectionMeshManager` : build initial + reconstruction des sections dirty.
-- ✅ Matériau `MeshLambertMaterial` unique + `vertexColors` + normales.
+- ✅ Matériau `MeshLambertMaterial` unique **texturé par un atlas** + normales + UV.
 - ✅ Éclairage : hémisphère + soleil directionnel + ambiante (piloté par `09`).
 - ✅ `BlockHighlight` : contour du bloc visé.
 - ✅ Brouillard (fog) pour l'ambiance et masquer les bords lointains.
 - ❌ **Greedy meshing** (fusion de faces) → post-MVP (voir §11).
-- ❌ Textures / atlas, ombres portées, occlusion ambiante calculée, transparence.
+- ❌ Ombres portées, occlusion ambiante calculée, **transparence** (feuilles opaques).
 - ❌ Post-processing.
 
 ## 3. Renderer, scène, caméra
@@ -46,19 +46,36 @@ export class Renderer {
 - **Resize** : sur `window.resize`, `camera.aspect = w/h`,
   `updateProjectionMatrix()`, `renderer.setSize(w, h)`.
 
-## 4. Matériau & attributs de géométrie
+## 4. Atlas de textures, matériau & attributs
 
-- **Un seul matériau partagé** pour toutes les sections :
-  `new THREE.MeshLambertMaterial({ vertexColors: true, color: 0xffffff })`.
-  - `color: 0xffffff` (blanc) → la couleur finale vient des **vertex colors**
-    (couleur du bloc) modulée par la **lumière** (jour/nuit). Pas de teinte
-    cuite dans les sommets.
-- **Géométrie par section** = `BufferGeometry` avec 4 attributs :
-  - `position` (Float32, xyz par sommet),
-  - `normal` (Float32, normale **plate** de la face — indispensable pour Lambert),
-  - `color` (Float32, rgb par sommet = couleur du bloc pour cette face),
-  - **index** (Uint32 — une section peut dépasser 65 535 sommets si elle est
-    très fragmentée).
+### Atlas (`render/atlas.ts` + `world/textures.ts`)
+
+- Les tuiles 16×16 (herbe dessus/côté, terre, pierre, sable, bois côté/dessus,
+  feuilles) sont dessinées **côte à côte** sur un `<canvas>` → une seule image
+  d'atlas (`ATLAS_COLS × 16` px), chargée **une fois au démarrage** (async).
+- `THREE.CanvasTexture` avec **`NearestFilter`** (pixel art net), **sans
+  mipmaps**, `colorSpace = SRGBColorSpace`.
+- Source : **ProgrammerArt** (CC-BY-4.0). Voir `public/textures/blocks/` et le
+  crédit dans le README.
+
+### Matériau
+
+- **Un seul matériau partagé** : `new THREE.MeshLambertMaterial({ map: atlas })`.
+  La texture est **modulée par la lumière** de la scène (jour/nuit).
+
+### Attributs de géométrie (par section)
+
+`BufferGeometry` avec 4 attributs :
+- `position` (Float32, xyz par sommet),
+- `normal` (Float32, normale **plate** de la face — indispensable pour Lambert),
+- **`uv`** (Float32, coordonnées dans l'atlas ; tuile choisie selon la face —
+  dessus / dessous / côtés — via `BlockDef.tex`),
+- **index** (Uint32 — une section peut dépasser 65 535 sommets).
+
+- **Anti-bleeding** : les UV sont rognés d'un **demi-texel** vers l'intérieur de
+  la tuile (`0.5/(ATLAS_COLS·16)` en U, `0.5/16` en V).
+- **Orientation** : les UV des faces latérales sont alignés sur `+Y` (v = haut)
+  → l'herbe garde sa bande verte en haut et le bois son grain vertical.
 - Appeler `computeBoundingSphere()` sur chaque géométrie → active le **frustum
   culling** automatique de three.js par section.
 
@@ -88,7 +105,8 @@ pour x dans [sx*16, sx*16+16):
         émettre la face d en (x, y, z):
           - 4 sommets (coins du cube sur la face d)
           - normale = normal(d)
-          - couleur = (d == +Y et def.colorTop) ? colorTop : def.color
+          - tuile = def.tex.top (si d==+Y) / .bottom (si d==-Y) / .side (sinon)
+          - UV = coordonnées de la tuile dans l'atlas (rognées d'un demi-texel)
           - 2 triangles (6 indices), winding CCW vue de l'extérieur
 ```
 
@@ -104,7 +122,7 @@ Cube unité du bloc `(x,y,z)` occupant `[x,x+1]×[y,y+1]×[z,z+1]`.
 | --------- | ------------- | ----------- | ------------------------------- |
 | +X        | (1,0,0)       | (+1, 0, 0)  | face droite                     |
 | −X        | (−1,0,0)      | (−1, 0, 0)  | face gauche                     |
-| +Y        | (0,1,0)       | (0, +1, 0)  | dessus (utilise `colorTop`)     |
+| +Y        | (0,1,0)       | (0, +1, 0)  | dessus (tuile `tex.top`)        |
 | −Y        | (0,−1,0)      | (0, −1, 0)  | dessous                         |
 | +Z        | (0,0,1)       | (0, 0, +1)  | face avant                      |
 | −Z        | (0,0,−1)      | (0, 0, −1)  | face arrière                    |

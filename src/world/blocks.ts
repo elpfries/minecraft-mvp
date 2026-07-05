@@ -1,6 +1,8 @@
 // Registre central des blocs. Cf. specs/03.
 // Les IDs sont stables : on ajoute à la fin, on ne réordonne jamais.
 
+import { TILE } from "./textures";
+
 export enum BlockId {
   AIR = 0,
   GRASS = 1,
@@ -11,11 +13,19 @@ export enum BlockId {
   LEAVES = 6,
 }
 
+/** Tuiles d'atlas par face d'un bloc. */
+export interface BlockTex {
+  top: number; // face du dessus (+Y)
+  bottom: number; // face du dessous (-Y)
+  side: number; // faces latérales (±X, ±Z)
+}
+
 export interface BlockDef {
   id: BlockId;
   name: string;
-  color: number; // 0xRRGGBB — faces latérales + dessous
-  colorTop?: number; // override de la face du dessus
+  color: number; // 0xRRGGBB — utilisé par la pastille de hotbar (pas le rendu 3D)
+  colorTop?: number; // couleur de la pastille pour la face du dessus
+  tex?: BlockTex; // tuiles de texture (absent pour AIR)
   solid: boolean; // collision + occlusion des faces voisines
   placeable: boolean; // apparaît dans la hotbar & posable
 }
@@ -23,12 +33,55 @@ export interface BlockDef {
 // Tableau indexé par BlockId (accès O(1)).
 export const BLOCKS: readonly BlockDef[] = [
   { id: BlockId.AIR, name: "Air", color: 0x000000, solid: false, placeable: false },
-  { id: BlockId.GRASS, name: "Herbe", color: 0x7a5230, colorTop: 0x5fae3a, solid: true, placeable: true },
-  { id: BlockId.DIRT, name: "Terre", color: 0x7a5230, solid: true, placeable: true },
-  { id: BlockId.STONE, name: "Pierre", color: 0x8a8a8a, solid: true, placeable: true },
-  { id: BlockId.SAND, name: "Sable", color: 0xdcd29a, solid: true, placeable: true },
-  { id: BlockId.WOOD, name: "Bois", color: 0x9c6b3f, solid: true, placeable: true },
-  { id: BlockId.LEAVES, name: "Feuille", color: 0x3f7a28, solid: true, placeable: true },
+  {
+    id: BlockId.GRASS,
+    name: "Herbe",
+    color: 0x7a5230,
+    colorTop: 0x5fae3a,
+    tex: { top: TILE.GRASS_TOP, bottom: TILE.DIRT, side: TILE.GRASS_SIDE },
+    solid: true,
+    placeable: true,
+  },
+  {
+    id: BlockId.DIRT,
+    name: "Terre",
+    color: 0x7a5230,
+    tex: { top: TILE.DIRT, bottom: TILE.DIRT, side: TILE.DIRT },
+    solid: true,
+    placeable: true,
+  },
+  {
+    id: BlockId.STONE,
+    name: "Pierre",
+    color: 0x8a8a8a,
+    tex: { top: TILE.STONE, bottom: TILE.STONE, side: TILE.STONE },
+    solid: true,
+    placeable: true,
+  },
+  {
+    id: BlockId.SAND,
+    name: "Sable",
+    color: 0xdcd29a,
+    tex: { top: TILE.SAND, bottom: TILE.SAND, side: TILE.SAND },
+    solid: true,
+    placeable: true,
+  },
+  {
+    id: BlockId.WOOD,
+    name: "Bois",
+    color: 0x9c6b3f,
+    tex: { top: TILE.LOG_TOP, bottom: TILE.LOG_TOP, side: TILE.LOG_SIDE },
+    solid: true,
+    placeable: true,
+  },
+  {
+    id: BlockId.LEAVES,
+    name: "Feuille",
+    color: 0x3f7a28,
+    tex: { top: TILE.LEAVES, bottom: TILE.LEAVES, side: TILE.LEAVES },
+    solid: true,
+    placeable: true,
+  },
 ];
 
 export function getBlockDef(id: BlockId): BlockDef {

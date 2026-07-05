@@ -16,7 +16,7 @@ unique. Aucun autre système ne code « en dur » une couleur ou une solidité.
 - ✅ Couleurs unies (base + override de face supérieure).
 - ✅ Propriétés `solid` / `placeable`.
 - ✅ Contenu par défaut de la hotbar.
-- ❌ Textures image / atlas (post-MVP).
+- ✅ **Textures** (atlas 16×16, tuiles par face) — cf. [`04`](./04-rendering.md) §4.
 - ❌ Blocs à comportement (fluides, redstone, orientation, états) — hors MVP.
 - ❌ Transparence / semi-transparence (tous les blocs solides sont opaques).
 
@@ -42,24 +42,27 @@ export enum BlockId {
 ## 4. Modèle de définition
 
 ```ts
+export interface BlockTex { top: number; bottom: number; side: number; } // index de tuile d'atlas
+
 export interface BlockDef {
   id: BlockId;
   name: string;         // libellé affiché (hotbar, debug)
-  color: number;        // 0xRRGGBB — faces latérales + dessous
-  colorTop?: number;    // override de la face du dessus (défaut = color)
+  color: number;        // 0xRRGGBB — pastille de hotbar (PAS le rendu 3D)
+  colorTop?: number;    // couleur de pastille pour la face du dessus
+  tex?: BlockTex;       // tuiles de texture par face (absent pour AIR)
   solid: boolean;       // collision physique + occlusion des faces voisines
   placeable: boolean;   // apparaît dans la hotbar & posable par le joueur
 }
 ```
 
-- **Couleurs unies** : pas de texture au MVP. `color` s'applique à toutes les
-  faces sauf le dessus si `colorTop` est fourni (permet l'herbe verte sur dessus
-  brun, très reconnaissable).
-- **Éclairage** : les faces sont **différenciées par la lumière réelle** de la
-  scène (soleil directionnel + ambiante, cf. [`04-rendering.md`](./04-rendering.md)
-  et [`09-day-night.md`](./09-day-night.md)), **pas** par une teinte cuite dans
-  les sommets. Les couleurs ci-dessous sont donc les couleurs *à pleine
-  lumière*.
+- **Textures par face** : `tex` donne l'index de tuile d'atlas pour le **dessus**,
+  le **dessous** et les **côtés** (ex. herbe : `grass_top` / `dirt` / `grass_side`,
+  bois : `log_oak_top` / `log_oak_top` / `log_oak`). Les indices et l'atlas sont
+  définis dans `world/textures.ts` et [`04-rendering.md`](./04-rendering.md) §4.
+- **`color` / `colorTop`** ne servent plus qu'à la **pastille de hotbar**
+  ([`08`](./08-hotbar-hud.md)), pas au rendu 3D.
+- **Éclairage** : la texture est **modulée par la lumière réelle** de la scène
+  (soleil + ambiante, cf. [`09-day-night.md`](./09-day-night.md)).
 
 ## 5. Registre des blocs (MVP)
 
@@ -73,12 +76,14 @@ export interface BlockDef {
 | `WOOD`    | Bois    | `0x9C6B3F` | —          | true  | true      |
 | `LEAVES`  | Feuille | `0x3F7A28` | —          | true  | true      |
 
-> Couleurs indicatives, ajustables au ressenti. `GRASS` = dessus vert, côtés/bas
-> couleur terre (identique à `DIRT`) → aspect « bloc d'herbe » classique.
+> La colonne `color` ne sert qu'à la **pastille de hotbar**. Le rendu 3D utilise
+> les **textures** (`tex`) : `GRASS` = `grass_top` (dessus) / `grass_side`
+> (côtés, bande verte en haut) / `dirt` (dessous) ; `WOOD` = `log_oak_top`
+> (dessus/dessous) / `log_oak` (côtés) ; les autres sont uniformes.
 >
-> **`LEAVES`** : bloc **opaque et solide** au MVP (comme les autres). Le
-> feuillage rend donc comme un bloc plein vert — équivalent des « feuilles
-> rapides » de Minecraft. La **transparence** (feuillage ajouré) est post-MVP.
+> **`LEAVES`** : bloc **opaque et solide** au MVP (texture `leaves_oak_opaque`).
+> Le feuillage rend comme un bloc plein — équivalent des « feuilles rapides » de
+> Minecraft. La **transparence** (feuillage ajouré) est post-MVP.
 > Utilisé par le générateur d'arbres ([`10-trees.md`](./10-trees.md)).
 
 Le registre est un **tableau indexé par `id`** (accès O(1)) :

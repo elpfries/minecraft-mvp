@@ -10,8 +10,9 @@ et on pose des blocs, sous un cycle jour/nuit.
   plaines, **collines arrondies** (herbe), **montagnes pointues** avec **pierre
   apparente**, et **forêts** groupées (zones denses + plaines sans arbres).
 - 🌳 **Arbres** (chênes façon Minecraft) : tronc en bois, couronne de feuilles.
-- 🧊 **Rendu** three.js : un mesh par section avec *face culling*, matériau unique
-  + couleurs par sommet, re-meshing incrémental à chaque bloc modifié.
+- 🧊 **Rendu** three.js : un mesh par section avec *face culling*, **textures**
+  (atlas 16×16, filtre *nearest* pixel-art), re-meshing incrémental à chaque
+  bloc modifié.
 - 🚶 **Déplacement FPS** : marche, saut, gravité, collisions AABB, *pointer lock*
   (clavier **ZQSD**/WASD géré via les codes physiques → OK sur AZERTY).
 - ⛏️ **Casser / poser** des blocs via raycast, avec surbrillance du bloc visé.
@@ -27,7 +28,7 @@ et on pose des blocs, sous un cycle jour/nuit.
 | Sauter              | **Espace**                         |
 | Regarder            | **Souris**                         |
 | Casser un bloc      | **Clic gauche**                    |
-| Poser un bloc       | **Clic droit**                     |
+| Poser un bloc       | **E** (ou clic droit)              |
 | Choisir un bloc     | **1–9** ou **molette**             |
 | Libérer la souris   | **Échap**                          |
 
@@ -85,6 +86,17 @@ Voir [`specs/README.md`](./specs/README.md) pour l'index.
 
 Les principaux paramètres (relief, forêts, physique, jour/nuit) sont regroupés
 dans [`src/core/constants.ts`](./src/core/constants.ts) et documentés dans les specs.
+
+## Crédits & licences des assets
+
+Les textures des blocs proviennent de **ProgrammerArt** (par *deathcap* et
+contributeurs), sous licence **[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)** —
+dépôt : <https://github.com/deathcap/ProgrammerArt>.
+
+*Modifications apportées :* sélection d'un sous-ensemble de tuiles 16×16
+(herbe, terre, pierre, sable, bois, feuilles) assemblées en un atlas au
+chargement. Fichiers et licence complète dans
+[`public/textures/blocks/`](./public/textures/blocks/).
 
 ## Dépannage
 
