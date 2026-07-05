@@ -1,8 +1,17 @@
 # Minecraft MVP
 
+<!-- Lien démo — à activer après la Phase 3 (GitHub Pages) :
+▶️ **[Jouer à la démo en ligne](https://elpfries.github.io/minecraft-mvp/)**
+-->
+<!-- Badge CI — à activer après la Phase 2 (GitHub Actions) :
+![CI](https://github.com/elpfries/minecraft-mvp/actions/workflows/ci.yml/badge.svg)
+-->
+
 Un mini-Minecraft **jouable dans le navigateur**, construit avec **TypeScript**,
 **three.js** et **Vite**. Mode créatif : on explore un monde à relief, on casse
 et on pose des blocs, sous un cycle jour/nuit.
+
+![Aperçu du jeu : monde à relief avec collines, forêt et montagnes, sous un ciel de fin de journée](docs/screenshot.png)
 
 ## Fonctionnalités
 
@@ -86,6 +95,25 @@ Voir [`specs/README.md`](./specs/README.md) pour l'index.
 
 Les principaux paramètres (relief, forêts, physique, jour/nuit) sont regroupés
 dans [`src/core/constants.ts`](./src/core/constants.ts) et documentés dans les specs.
+
+## Auteurs
+
+Projet développé **en famille**, avec une démarche *spec-first* assistée par IA
+(Claude Code) :
+
+- **Eric** ([elpfries](https://github.com/elpfries)) — conception, spécifications, développement
+- **R.** — tests, idées, relecture
+- **A.** — tests, idées, relecture
+
+> 🔒 Par respect de la vie privée, les enfants apparaissent sous **initiales**
+> (pas de prénoms complets, de noms de famille, d'âges ni de photos).
+
+## Licence
+
+Le **code** de ce projet est distribué sous licence **[MIT](./LICENSE)** : libre
+de réutilisation, avec conservation de la mention de copyright.
+
+Les **assets** (textures) suivent leur propre licence — voir ci-dessous.
 
 ## Crédits & licences des assets
 
