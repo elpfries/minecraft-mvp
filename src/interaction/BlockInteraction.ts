@@ -1,7 +1,7 @@
 // Casser / poser des blocs via raycast. Cf. specs/07 §6-7.
 
 import * as THREE from "three";
-import { EYE_HEIGHT, PLAYER_HEIGHT, PLAYER_WIDTH, REACH } from "../core/constants";
+import { EYE_HEIGHT, PLACE_KEY, PLAYER_HEIGHT, PLAYER_WIDTH, REACH } from "../core/constants";
 import { Vec3 } from "../core/math";
 import { Input } from "../input/Input";
 import { BlockId } from "../world/blocks";
@@ -43,8 +43,11 @@ export class BlockInteraction {
       world.setBlock(hit.block.x, hit.block.y, hit.block.z, BlockId.AIR);
     }
 
-    // Poser (clic droit)
-    if (input.consumeClick(2)) {
+    // Poser (clic droit OU touche E — la Magic Mouse n'a pas de bouton droit).
+    // On consomme les deux entrées pour éviter un appui résiduel à la frame suivante.
+    const placeByMouse = input.consumeClick(2);
+    const placeByKey = input.consumeKey(PLACE_KEY);
+    if (placeByMouse || placeByKey) {
       const id = hotbar.selected();
       if (id === BlockId.AIR) return;
       const c = hit.adjacent;

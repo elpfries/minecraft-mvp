@@ -51,6 +51,8 @@ export const EYE_HEIGHT = 1.6;
 
 // --- Interaction ---
 export const REACH = 5; // portée casser/poser (blocs)
+// Poser un bloc : clic droit OU cette touche (utile sans bouton droit, ex. Magic Mouse)
+export const PLACE_KEY = "KeyE";
 
 // --- Caméra ---
 export const FOV = 70;

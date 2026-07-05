@@ -156,7 +156,7 @@ si input.isDown("Space") et player.onGround:
 | Sauter                 | `Space`                 | seulement si `onGround`                |
 | Regarder               | Souris (Pointer Lock)   | yaw/pitch                              |
 | Casser bloc            | Clic gauche (`0`)       | logique dans [`07`](./07-interaction.md) |
-| Poser bloc             | Clic droit (`2`)        | logique dans [`07`](./07-interaction.md) |
+| Poser bloc             | `KeyE` **ou** clic droit (`2`) | E = repli sans bouton droit (Magic Mouse) ; logique dans [`07`](./07-interaction.md) |
 | Sélection hotbar       | `Digit1`…`Digit9`       | logique dans [`08`](./08-hotbar-hud.md)  |
 | Sélection hotbar       | Molette                 | `wheelDelta`                           |
 | (Re)capturer la souris | Clic sur le canvas      | si non verrouillé                      |

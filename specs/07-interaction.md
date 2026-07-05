@@ -17,8 +17,8 @@ re-meshing de la section concernée.
 - ✅ `RayHit` : bloc visé, **normale de face**, **cellule adjacente** (pour
   poser).
 - ✅ Casser (clic gauche) : bloc solide → `AIR`.
-- ✅ Poser (clic droit) : bloc `placeable` dans la cellule adjacente si `AIR` et
-  **sans chevaucher le joueur**.
+- ✅ Poser (clic droit **ou** touche `E`) : bloc `placeable` dans la cellule
+  adjacente si `AIR` et **sans chevaucher le joueur**.
 - ✅ Mise à jour du highlight (chaque frame, indépendamment des clics).
 - ❌ Temps de minage progressif (cassage instantané, mode créatif).
 - ❌ Drops / items, sons, animations de main, interactions spécifiques par bloc.
@@ -111,10 +111,14 @@ si input.consumeClick(0) et hit:
    world.setBlock(hit.block, AIR)      # tout bloc solide est cassable (créatif)
 ```
 
-### Poser — clic droit
+### Poser — clic droit **ou** touche `E`
+
+La touche `E` (`PLACE_KEY`) est un repli pour les souris **sans bouton droit**
+(ex. Magic Mouse). On consomme les deux entrées pour éviter un appui résiduel.
 
 ```
-si input.consumeClick(2) et hit:
+poser = input.consumeClick(2) | input.consumeKey(PLACE_KEY)   # les deux consommés
+si poser et hit:
    id = hotbar.selected()
    si id == AIR: return                       # slot vide -> rien à poser
    cible = hit.adjacent

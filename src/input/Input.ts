@@ -6,6 +6,7 @@
 
 export class Input {
   private down = new Set<string>();
+  private pressed = new Set<string>(); // touches passées de relâché -> enfoncé cette frame
   private pendingClicks = new Set<number>();
   private _mouseDX = 0;
   private _mouseDY = 0;
@@ -16,10 +17,16 @@ export class Input {
   constructor(canvas: HTMLElement) {
     this.canvas = canvas;
 
-    window.addEventListener("keydown", (e) => this.down.add(e.code));
+    window.addEventListener("keydown", (e) => {
+      if (!this.down.has(e.code)) this.pressed.add(e.code); // front montant (ignore l'auto-répétition)
+      this.down.add(e.code);
+    });
     window.addEventListener("keyup", (e) => this.down.delete(e.code));
     // évite qu'une touche reste "enfoncée" si le focus est perdu
-    window.addEventListener("blur", () => this.down.clear());
+    window.addEventListener("blur", () => {
+      this.down.clear();
+      this.pressed.clear();
+    });
 
     document.addEventListener("mousemove", (e) => {
       if (!this._locked) return;
@@ -48,6 +55,15 @@ export class Input {
 
   isDown(code: string): boolean {
     return this.down.has(code);
+  }
+
+  /** vrai une seule fois par appui (front montant), auto-répétition ignorée */
+  consumeKey(code: string): boolean {
+    if (this.pressed.has(code)) {
+      this.pressed.delete(code);
+      return true;
+    }
+    return false;
   }
 
   get mouseDX(): number {
@@ -85,5 +101,6 @@ export class Input {
     this._mouseDY = 0;
     this._wheelDelta = 0;
     this.pendingClicks.clear();
+    this.pressed.clear();
   }
 }
