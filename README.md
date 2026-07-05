@@ -23,7 +23,7 @@ et on pose des blocs, sous un cycle jour/nuit.
   (clavier **ZQSD**/WASD géré via les codes physiques → OK sur AZERTY).
 - ⛏️ **Casser / poser** des blocs via raycast, avec surbrillance du bloc visé.
 - 🎒 **Hotbar** (herbe, terre, pierre, sable, bois, feuille) au clavier ou à la molette.
-- 🌗 **Cycle jour/nuit** (~3 min) : ciel, soleil et lumière ambiante animés.
+- 🌗 **Cycle jour/nuit** (~6 min) : ciel, soleil et lumière ambiante animés.
 
 ## Commandes de jeu
 

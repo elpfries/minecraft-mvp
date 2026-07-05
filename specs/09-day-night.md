@@ -1,6 +1,6 @@
 # 09 — Cycle jour/nuit
 
-> Le temps avance sur un cycle de **3 minutes**. On en déduit la **direction du
+> Le temps avance sur un cycle de **6 minutes**. On en déduit la **direction du
 > soleil** et les **couleurs/intensités** (ciel, brouillard, soleil, hémisphère,
 > ambiante), poussées vers `Environment` ([`04-rendering.md`](./04-rendering.md)
 > §7). Aucun éclairage par bloc.
@@ -12,7 +12,7 @@ et le ciel, sans coût par bloc ni ombres portées.
 
 ## 2. Périmètre
 
-- ✅ Temps normalisé `t ∈ [0,1)`, cycle `DAY_LENGTH = 180 s`.
+- ✅ Temps normalisé `t ∈ [0,1)`, cycle `DAY_LENGTH = 360 s`.
 - ✅ Arc du soleil (direction) en fonction de `t`.
 - ✅ Interpolation des couleurs/intensités entre **keyframes**.
 - ✅ Pilotage de `Environment.apply(...)` chaque frame.
@@ -127,7 +127,7 @@ en `dt` variable (pas besoin du pas fixe).
 
 ## 9. Questions ouvertes
 
-- **Durée** : 3 min (`DAY_LENGTH=180`). Ajustable ; touche debug pour accélérer
+- **Durée** : 6 min (`DAY_LENGTH=360`). Ajustable ; touche debug pour accélérer
   le temps utile en dev (optionnel).
 - **HemisphereLight animée vs fixe** (voir §6).
 - **Nuit trop sombre ?** `ambI`/`hemiI` de nuit à régler pour rester jouable

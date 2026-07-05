@@ -62,5 +62,5 @@ export const MOUSE_SENSITIVITY = 0.0022; // rad/pixel
 export const PITCH_MAX = (89 * Math.PI) / 180;
 
 // --- Jour/nuit ---
-export const DAY_LENGTH = 180; // secondes / cycle complet
+export const DAY_LENGTH = 360; // secondes / cycle complet
 export const DAY_START = 0.3; // t initial (matin)
